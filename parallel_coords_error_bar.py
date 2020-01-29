@@ -10,7 +10,7 @@ import numpy as np
 names = ["x1", "x2", "x3"]  # Objective names
 stdnames = [name + "_std" for name in names]
 means = pd.DataFrame(np.random.rand(10, 3), columns=names)  # Mean values
-std = pd.DataFrame(np.random.rand(10, 3) * 0.1, columns=stdnames)  # Standard deviation
+std = pd.DataFrame(np.random.rand(10, 3) * 0.5, columns=stdnames)  # Standard deviation
 
 df = means.join(std)
 
@@ -80,6 +80,9 @@ def update_graphs(rows, derived_virtual_selected_rows):
         "firebrick" if i in derived_virtual_selected_rows else "#A9A9A9"
         for i in range(len(dff))
     ]
+    opacity = [
+        1 if i in derived_virtual_selected_rows else 0.3 for i in range(len(dff))
+    ]
     fig = go.Figure()
     for i in range(len(dff)):
         fig.add_scatter(
@@ -90,10 +93,11 @@ def update_graphs(rows, derived_virtual_selected_rows):
                 array=dff[stdnames].loc[i].values,
                 visible=True,
             ),
-            line = dict(color=colors[i]),
+            line=dict(color=colors[i]),
+            opacity=opacity[i],
         )
 
-    return [dcc.Graph(id='plot', figure=fig)]
+    return [dcc.Graph(id="plot", figure=fig)]
 
 
 if __name__ == "__main__":
